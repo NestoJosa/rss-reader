@@ -18,14 +18,15 @@ import axios from 'axios'
 export default {
   data() {
     return {
-      rssData: null
+      rssData: null,
+      apiKey: import.meta.env.VITE_RSS2JSON_API_KEY
     }
   },
   created() {
     const url = 'https://api.rss2json.com/v1/api.json'
     const params = {
       rss_url: 'https://politiken.dk/rss/senestenyt.rss',
-      api_key: 'api-key'
+      api_key: this.apiKey
     }
     axios
       .get(url, { params })
