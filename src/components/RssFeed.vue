@@ -7,7 +7,7 @@
         <p>{{ article.description }}</p>
         <p>Category: {{ article.categories }}</p>
         <p>Author: {{ article.author }}</p>
-        <p>Published Date: {{ new Date(article.pubDate).toLocaleDateString() }}</p>
+        <p>Published Date: {{ new Date(article.pubDate) }}</p>
         <p>
           Media: <a :href="article.mediaLink" target="_blank">{{ article.media }}</a>
         </p>
@@ -34,19 +34,26 @@ export default {
   },
   methods: {
     fetchAndParseFeeds() {
-      this.feeds.forEach((feed) => {
-        axios
+      let allArticles = []
+      const feedPromises = this.feeds.map((feed) => {
+        return axios
           .get(`https://api.rss2json.com/v1/api.json?rss_url=${feed.url}&api_key=${this.apiKey}`)
           .then(async (response) => {
             const parserModule = await import(`./parsers/${feed.parser}.js`)
-            const parsedArticles = parserModule[`parse${feed.parser}`](response.data)
-            this.articles = [...this.articles, ...parsedArticles]
-            console.log('Updated articles:', this.articles) // Log the updated articles array
-          })
-          .catch((error) => {
-            console.error('Error fetching or parsing feed:', error)
+            return parserModule[`parse${feed.parser}`](response.data) // Return parsed articles
           })
       })
+
+      Promise.all(feedPromises)
+        .then((articlesArrays) => {
+          allArticles = articlesArrays.flat() // Flatten the array of arrays
+          allArticles.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate)) // Sort articles by pubDate
+          this.articles = allArticles
+          console.log('Updated articles:', this.articles) // Log the updated articles array
+        })
+        .catch((error) => {
+          console.error('Error fetching or parsing feed:', error)
+        })
     }
   },
 
