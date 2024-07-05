@@ -1,12 +1,22 @@
 <template>
   <div>
     <!-- Display the RSS feed here -->
-    <p v-if="rssData && rssData.feed">{{ rssData.feed.title }}</p>
-    <ul v-if="rssData && rssData.items">
+    <ul v-if="rssData && rssData.feed && rssData.items">
       <li v-for="(item, index) in rssData.items" v-bind:key="index">
-        <h3>{{ item.title }}</h3>
-        <p>{{ item.description }}</p>
-        <a v-bind:href="item.link" target="_blank">Read more</a>
+        <div>
+          <span>{{ item.categories[0] }}</span>
+          <span> | </span>
+          <span>{{ rssData.feed.title.split('.')[0] }}</span>
+          <span> | </span>
+          <span>{{ item.pubDate }}</span>
+        </div>
+
+        <a v-bind:href="item.link" target="_blank">
+          <div>
+            <h3>{{ item.title }}</h3>
+            <p>{{ item.description }}</p>
+          </div>
+        </a>
       </li>
     </ul>
   </div>
