@@ -1,18 +1,8 @@
 <template>
   <div class="articles-container">
-    <h2>Articles</h2>
     <ul>
       <li v-for="article in articles" :key="article.link">
-        <h3>{{ article.title }}</h3>
-        <p>{{ article.description }}</p>
-        <p>Category: {{ article.categories }}</p>
-        <a :href="article.link" target="_blank">Read more</a>
-        <p>Author: {{ article.author }}</p>
-        <p>Published on: {{ new Date(article.pubDate).toLocaleString() }}</p>
-        <p>
-          Media: <a :href="article.mediaLink" target="_blank">{{ article.media }}</a>
-        </p>
-        <p>Source: <a :href="article.mediaSource" target="_blank">Link</a></p>
+        <ArticleCard :article="article" />
       </li>
     </ul>
   </div>
@@ -21,8 +11,12 @@
 <script>
 import axios from 'axios'
 import xml2js from 'xml-js'
+import ArticleCard from './ArticleCard.vue'
 
 export default {
+  components: {
+    ArticleCard
+  },
   data() {
     return {
       articles: [],

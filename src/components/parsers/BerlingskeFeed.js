@@ -11,7 +11,7 @@ export function parseBerlingskeFeed(data) {
     author: item.author || 'Unknown author',
     pubDate: item.pubDate['_text'] || new Date().toISOString(),
     media: 'Berlingske',
-    mediaLink: data.rss.channel.title['_cdata'] || '#',
-    mediaSource: 'https://www.berlingske.dk/content/rss'
+    mediaLink: 'https://www.berlingske.dk/' || '#'
+    // mediaSource: 'https://www.berlingske.dk/content/rss'
   }))
 }

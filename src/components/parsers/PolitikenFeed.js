@@ -11,7 +11,7 @@ export function parsePolitikenFeed(data) {
     author: item.author || 'Unknown author',
     pubDate: item.pubDate || new Date().toISOString(), // Current date as fallback,
     media: data.feed.title ? data.feed.title.split('.')[0] : 'Unknown media',
-    mediaLink: data.feed.link || '#',
-    mediaSource: data.feed.url || '#'
+    mediaLink: data.feed.link || '#'
+    // mediaSource: data.feed.url || '#'
   }))
 }
