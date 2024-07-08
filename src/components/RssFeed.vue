@@ -12,6 +12,8 @@
 import axios from 'axios'
 import xml2js from 'xml-js'
 import ArticleCard from './ArticleCard.vue'
+import feedConfigs from './config/feedConfigs.js'
+import parseFeed from './parsers/parseFeed.js'
 
 export default {
   components: {
@@ -46,7 +48,6 @@ export default {
         const feedUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feed.url)}&api_key=${this.apiKey}`
         const response = await axios.get(feedUrl)
         const result = response.data
-        // console.log(result)
         return result
       } else if (feed.proxy == 'allorigins') {
         const feedUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(feed.url)}`
@@ -59,13 +60,18 @@ export default {
     },
 
     async parseFeedData(rawData, parserName) {
-      const parserModule = await import(`./parsers/${parserName}.js`)
-      return parserModule[`parse${parserName}`](rawData)
+      const config = feedConfigs[parserName]
+      if (!config) {
+        console.error(`No configuration found for parser: ${parserName}`)
+        return []
+      }
+      return parseFeed(rawData, config)
     },
 
     async fetchAndParseFeeds() {
       const feedPromises = this.feeds.map(async (feed) => {
         const rawData = await this.fetchFeed(feed)
+        console.log('Raw data:', rawData)
         return this.parseFeedData(rawData, feed.parser)
       })
 

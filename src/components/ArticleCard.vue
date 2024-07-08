@@ -13,7 +13,7 @@
       <p>
         <a :href="article.mediaLink" target="_blank">{{ article.media }}</a>
       </p>
-      <p>{{ article.author }}</p>
+      <p>{{ article.author || 'Unknown Author' }}</p>
       <p>
         {{ new Date(article.pubDate).toLocaleString([], { hour: 'numeric', minute: 'numeric' }) }}
       </p>
